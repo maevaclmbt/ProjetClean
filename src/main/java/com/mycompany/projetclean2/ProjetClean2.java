@@ -17,20 +17,20 @@ import java.sql.Statement;
 public class ProjetClean2 {
     
     private Connection conn;
- 
-    public static void debut() {
-        try (Connection con = connectSurServeurM3()) { // elle appelle la méthode connectSurServeurM3()
-            System.out.println("connecté");
-            /*ProjetClean2 gestionnaire = new ProjetClean2(con); // on crée une instance de la classe projet_bdd : gestionnaire ; constructeur = projetbdd ; // nom table, nom varibale = new nom instance table; schema
-            gestionnaire.creeSchema(); // l'instance "gestionnaire" peut utiliser la méthode creeSchema pour créer une table*/
-        } catch (SQLException ex) {
-            throw new Error("Connection impossible", ex); 
-        }
-    }
- 
     public ProjetClean2(Connection conn) {
         this.conn = conn;
     }
+ 
+    public static void debut() {
+    try (Connection con = connectSurServeurM3()) {
+        System.out.println("connecté");
+        creeSchema(con);
+    } catch (SQLException ex) {
+        throw new Error("Connection impossible", ex);
+    }
+}
+ 
+    
       public static Connection connectSurServeurM3() throws SQLException { 
         return connectGeneralMySQL("92.222.25.165", 3306, //c'est la qu'on forunit les infos pour se connecter (num serveur, num de port,...)
                 "m3_mcolombet01", "m3_mcolombet01", // ici il faut modifier à chaque fois que lquelq'un d'autre utilise avec les bonnes données
@@ -50,9 +50,9 @@ public class ProjetClean2 {
     }
          
          
-     public void creeSchema() throws SQLException{ // si erreur provoquée lance exeption type sql + void = renvoit rien
-        this.conn.setAutoCommit(false); // commit = valider modif table, si pas false, chaque enregistrement est ajoutée automatiquement, cette commande force l'arret de la fonctionnalité = enregistrer les info de la nouvelle table 
-        try (Statement st = this.conn.createStatement()){ //en cas d'erreur
+        public static void creeSchema(Connection conn) throws SQLException { // si erreur provoquée lance exeption type sql + void = renvoit rien
+        //this.conn.setAutoCommit(false); // commit = valider modif table, si pas false, chaque enregistrement est ajoutée automatiquement, cette commande force l'arret de la fonctionnalité = enregistrer les info de la nouvelle table 
+        try (Statement st = conn.createStatement()){ //en cas d'erreur
             st.executeUpdate(
                     "create table machine (\n"
                     + "    id integer not null primary key AUTO_INCREMENT,\n"
@@ -109,16 +109,62 @@ public class ProjetClean2 {
             );
             
             
-            this.conn.commit();
         } catch (SQLException ex){ // en cas d'erreur ici 
-            this.conn.rollback();
+         
             throw ex;
-        } finally {
-            this.conn.setAutoCommit (true); //tru = laisse l'ordi enregistrer 
-        }
+       
     } //fin creeSchema
     
-
+        }
+        
+        
+        
+         public void deleteSchema() throws SQLException {
+        try (Statement st = this.conn.createStatement()) {
+            // pour être sûr de pouvoir supprimer, il faut d'abord supprimer les liens
+            // puis les tables
+            // suppression des liens
+            try {
+                st.executeUpdate("alter table realise drop constraint fk_typeoperation_idtype");
+            } catch (SQLException ex) {
+                // nothing to do : maybe the constraint was not created
+            }
+            try {
+                st.executeUpdate("alter table type operation drop constraint fk_produit_idproduit");
+            } catch (SQLException ex) {
+            }
+            try {
+                st.executeUpdate("alter table realise drop constraint fk_realise_idmachines");
+            } catch (SQLException ex) {
+                // nothing to do : maybe the constraint was not created
+            }
+            try {
+                st.executeUpdate("alter table type operation drop constraint fk_realise_idtype");
+            } catch (SQLException ex) {
+            }
+            // je peux maintenant supprimer les tables
+            try {
+                st.executeUpdate("drop table machine");
+            } catch (SQLException ex) {
+            }
+            try {
+                st.executeUpdate("drop table toutes_les_opération");
+            } catch (SQLException ex) {
+            }
+            try {
+                st.executeUpdate("drop table produit");
+            } catch (SQLException ex) {
+            }
+            try {
+                st.executeUpdate("drop table typeoperation");
+            } catch (SQLException ex) {
+            }
+            try {
+                st.executeUpdate("drop table realise");
+            } catch (SQLException ex) {
+            }
+        }
+    }
     public static void main(String[] args) {
         System.out.println("execution du projet");
         debut();
