@@ -52,7 +52,7 @@ public class ProjetClean2 {
          
         public static void creeSchema(Connection conn) throws SQLException { // si erreur provoquée lance exeption type sql + void = renvoit rien
         conn.setAutoCommit(false); // commit = valider modif table, si pas false, chaque enregistrement est ajoutée automatiquement, cette commande force l'arret de la fonctionnalité = enregistrer les info de la nouvelle table 
-        /*try (Statement st = conn.createStatement()){ //en cas d'erreur
+        try (Statement st = conn.createStatement()){ //en cas d'erreur
             st.executeUpdate(
                 "create table machine (\n"
                         + "    id integer not null primary key AUTO_INCREMENT,\n"
@@ -114,7 +114,7 @@ public class ProjetClean2 {
         throw ex;
     } finally {
             conn.setAutoCommit (true); //tru = laisse l'ordi enregistrer 
-        }*/
+        }
     } 
         
         
@@ -125,12 +125,12 @@ public class ProjetClean2 {
             // puis les tables
             // suppression des liens
             try {
-                st.executeUpdate("alter table realise drop constraint fk_typeoperation_idtype");
+                st.executeUpdate("alter table toutes_les_opération drop constraint fk_typeoperation_idtype");
             } catch (SQLException ex) {
                 // nothing to do : maybe the constraint was not created
             }
             try {
-                st.executeUpdate("alter table type operation drop constraint fk_produit_idproduit");
+                st.executeUpdate("alter table toutes_les_opération drop constraint fk_produit_idproduit");
             } catch (SQLException ex) {
             }
             try {
@@ -139,7 +139,7 @@ public class ProjetClean2 {
                 // nothing to do : maybe the constraint was not created
             }
             try {
-                st.executeUpdate("alter table type operation drop constraint fk_realise_idtype");
+                st.executeUpdate("alter table type realise drop constraint fk_realise_idtype");
             } catch (SQLException ex) {
             }
             // je peux maintenant supprimer les tables
