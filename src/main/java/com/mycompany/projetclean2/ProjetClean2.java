@@ -119,8 +119,8 @@ public class ProjetClean2 {
         
         
         
-         public void deleteSchema() throws SQLException {
-        try (Statement st = this.conn.createStatement()) {
+         public static void deleteSchema(Connection conn) throws SQLException {
+        try (Statement st = conn.createStatement()) {
             // pour être sûr de pouvoir supprimer, il faut d'abord supprimer les liens
             // puis les tables
             // suppression des liens
