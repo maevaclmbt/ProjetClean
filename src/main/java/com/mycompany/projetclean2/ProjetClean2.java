@@ -51,7 +51,7 @@ public class ProjetClean2 {
          
          
         public static void creeSchema(Connection conn) throws SQLException { // si erreur provoquée lance exeption type sql + void = renvoit rien
-        //this.conn.setAutoCommit(false); // commit = valider modif table, si pas false, chaque enregistrement est ajoutée automatiquement, cette commande force l'arret de la fonctionnalité = enregistrer les info de la nouvelle table 
+        conn.setAutoCommit(false); // commit = valider modif table, si pas false, chaque enregistrement est ajoutée automatiquement, cette commande force l'arret de la fonctionnalité = enregistrer les info de la nouvelle table 
         try (Statement st = conn.createStatement()){ //en cas d'erreur
             st.executeUpdate(
                     "create table machine (\n"
@@ -108,14 +108,14 @@ public class ProjetClean2 {
                     + "    foreign key (idtype) references realise(id) \n"
             );
             
-            
+            conn.commit();
         } catch (SQLException ex){ // en cas d'erreur ici 
-         
-            throw ex;
-       
-    } //fin creeSchema
-    
+            conn.rollback();
+        throw ex;
+    } finally {
+            conn.setAutoCommit (true); //tru = laisse l'ordi enregistrer 
         }
+    } 
         
         
         
