@@ -12,14 +12,14 @@ import java.sql.SQLException;
  *
  * @author maeva
  */
-public class Machine {
+public class Machine_maeva {
     private int id;
     private String ref;
     private String des;
     private String puissance;
     
              
-         public Machine (int id, String ref, String des, String puissance){
+         public Machine_maeva (int id, String ref, String des, String puissance){
              this.id=id;
              this.ref=ref;
              this.des=des;
