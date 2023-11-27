@@ -12,14 +12,14 @@ import java.sql.SQLException;
  *
  * @author maeva
  */
-public class Machine_maeva {
-    private int id;
+public class Machine {
+    private final int id;
     private String ref;
     private String des;
-    private String puissance;
+    private Double puissance;
     
              
-         public Machine_maeva (int id, String ref, String des, String puissance){
+         public Machine (int id, String ref, String des, Double puissance){
              this.id=id;
              this.ref=ref;
              this.des=des;
@@ -33,7 +33,7 @@ public class Machine_maeva {
                 st.setInt(1, this.getId());
                 st.setString(2, this.getRef());
                 st.setString(3, this.getDes());
-                st.setString(4, this.getPuissance());
+                st.setDouble(4, this.getPuissance());
              }                 
          }
                 @Override
@@ -83,14 +83,14 @@ public class Machine_maeva {
     /**
      * @return the puissance
      */
-    public String getPuissance() {
+    public Double getPuissance() {
         return puissance;
     }
 
     /**
      * @param puissance the puissance to set
      */
-    public void setPuissance(String puissance) {
+    public void setPuissance(Double puissance) {
         this.puissance = puissance;
     }
             

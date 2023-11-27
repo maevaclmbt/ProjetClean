@@ -52,8 +52,8 @@ public class CreateMachine extends VerticalLayout{
 
             // Remplacement des paramètres dans la requête SQL avec les valeurs de la machine
             statement.setInt(1, machine.getId());
-            statement.setString(2, machine.getReference());
-            statement.setString(3, machine.getDescription());
+            statement.setString(2, machine.getRef());
+            statement.setString(3, machine.getDes());
             statement.setDouble(4, machine.getPuissance());
 
             // Exécution de la requête pour insérer la nouvelle machine dans la base de données

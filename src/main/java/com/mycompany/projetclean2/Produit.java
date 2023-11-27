@@ -4,12 +4,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class Product {
+public class Produit {
     private int id;
     private String ref;
     private String des;
 
-    public Product(int id, String ref, String des) {
+    public Produit(int id, String ref, String des) {
         this.id = id;
         this.ref = ref;
         this.des = des;
