@@ -6,7 +6,9 @@ package com.mycompany.projetclean6;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  *
@@ -23,14 +25,23 @@ public class TypeOperation {
              
          }
          
-         public void sauvegarde (Connection conn) throws SQLException{
-             try (PreparedStatement st= conn.prepareStatement(
-                     "insert into machine (id, des) values (?,?)")){
-                st.setInt(1, this.getId());
-                st.setString(2, this.getDes());
-                st.executeUpdate();
-             }                 
-         }
+    public void sauvegarde(Connection conn) throws SQLException {
+    try (PreparedStatement st = conn.prepareStatement(
+            "insert into typeoperation (des) values (?)", Statement.RETURN_GENERATED_KEYS)) {
+        st.setString(1, this.getDes());
+        st.executeUpdate();
+
+        // Récupérer la clé générée automatiquement (id)
+        try (ResultSet generatedKeys = st.getGeneratedKeys()) {
+            if (generatedKeys.next()) {
+                this.id = generatedKeys.getInt(1); // Mettre à jour l'ID dans l'objet Java
+            } else {
+                throw new SQLException("Échec de la récupération de l'ID généré.");
+            }
+        }
+    }
+}
+
                 @Override
          public String toString() {
              return "typeoperation{" +

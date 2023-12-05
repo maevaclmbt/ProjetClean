@@ -108,7 +108,7 @@ public class ProjetClean6 {
                         + "    id integer not null primary key AUTO_INCREMENT,\n"
                         + "    ref varchar(15) not null,\n"
                         + "    des text not null,\n" // Ajout de la virgule manquante ici
-                        + "    puissance double not null,\n"
+                        + "    puissance double not null\n"
                         + ")\n"
         );
             st.executeUpdate(
@@ -121,7 +121,7 @@ public class ProjetClean6 {
             st.executeUpdate(
                     "create table typeoperation (\n"
                     + "    id integer not null primary key AUTO_INCREMENT,\n"
-                    + "    des varchar(30) not null,\n"
+                    + "    des varchar(30) not null\n"
                     + ")\n"
             );
             st.executeUpdate(
@@ -135,7 +135,7 @@ public class ProjetClean6 {
                     "create table produit (\n"
                         + "    id integer primary key AUTO_INCREMENT ,\n"   //enelever primary key AUTO_INCREMENT si pblm 
                         + "    ref varchar(15) not null,\n"
-                        + "    des text not null,\n" // Ajout de la virgule manquante ici
+                        + "    des text not null\n" // Ajout de la virgule manquante ici
                         + ")\n"
             );
             st.executeUpdate(
@@ -391,7 +391,8 @@ public class ProjetClean6 {
                     } else if (rep == j++) {
                         System.out.println("Quelle est la description de votre nouvelle operation ?");
                         String Udes = Lire.S();
-                       st.executeUpdate("INSERT INTO `typeoperation` (`id`, `des`) VALUES (null, '" + Udes + ");");
+                        TypeOperation nouveauTypeOp = new TypeOperation(0, Udes);
+                        nouveauTypeOp.sauvegarde(conn);
                     } else if (rep == j++) {
                         ResultSet typeoperation = st.executeQuery("SELECT * FROM typeoperation");
                         while (typeoperation.next()) {
@@ -510,105 +511,3 @@ public class ProjetClean6 {
     
     
 }
-// classes initiale de fbdb que cg m'a fait enlever
-/*
-    public static void main(String[] args) {
-        System.out.println("execution du projet");
-        debut();
-    }
-
-
-    public static void debut() {
-    try  {
-        Connection conn = connectSurServeurM3();
-        System.out.println("connecté");
-        creeSchema(conn);
-        deleteSchema(conn);
-        initialise(conn);
-    } catch (SQLException ex) {
-        throw new Error("Connection impossible", ex);
-    }
-}*/
-
-
-
- /*   
-     public void MenuMachine() throws SQLException {
-        
-        int rep = -1;
-        
-        while (rep != 0) {
-            try (Statement st = this.conn.createStatement()) {
-            int i = 1;
-            System.out.println("Menu utilisateur");
-            System.out.println("================");
-            System.out.println((i++) + ") chercher une machine");
-            System.out.println((i++) + ") ajouter une machine");
-            System.out.println((i++) + ") lister les machines");
-            System.out.println((i++) + ") créer une table");
-            System.out.println("0) Fin");
-            System.out.print("Votre choix : ");
-            rep = Lire.i();
-            try {
-                int j = 1;
-                if (rep == j++) {
-                    System.out.println("Quelle est l'id de la machine que vous cherchez ?");
-                    int Uid = Lire.i();
-                    ResultSet r = st.executeQuery("select * from machine where id=" + Uid + ";");
-                    while (r.next()) {
-                        int id = r.getInt(1);
-                        String ref = r.getString(2);
-                        String des = r.getString(3);
-                        int puissance = r.getInt(3);
-                        System.out.println(id + " : " + ref + " : " + des + " : " + puissance);
-                    }
-                } else if (rep == j++) {
-                    System.out.println("Quelle est la ref de votre nouvelle machine ?");
-                    String Uref = Lire.S();
-                    System.out.println("Quelle est la description de votre nouvelle machine ?");
-                    String Udes = Lire.S();
-                    System.out.println("Quelle est la puissance de votre nouvelle machine ?");
-                    int Upuissance = Lire.i();
-                    st.executeUpdate("INSERT INTO `machine` (`id`, `ref`, `des`, `puissance`) VALUES (null, '" + Uref + "', '" + Udes + "', " + Upuissance + ");");
-                } else if (rep == j++) {
-                    ResultSet machines = st.executeQuery("SELECT * FROM machine");
-                    while (machines.next()) {
-                        int id = machines.getInt("id");
-                        String ref = machines.getString("ref");
-                        String des = machines.getString("des");
-                        int puissance = machines.getInt("puissance");
-                        System.out.println(id + " : " + ref + " : " + des + " : " + puissance);
-                    }
-                } else if (rep == j++) {
-                    System.out.println("Combien de colonnes souhaitez-vous dans votre table ?");
-                    int nombreColonnes = Lire.i();
-
-                    StringBuilder query = new StringBuilder("CREATE TABLE IF NOT EXISTS nouvelle_table (");
-
-                    for (int colonne = 1; colonne <= nombreColonnes; colonne++) {
-                        System.out.println("Entrez le nom de la colonne " + colonne + ": ");
-                        String nomColonne = Lire.S();
-
-                        System.out.println("Entrez le type de données pour la colonne " + nomColonne + " (ex: INT, VARCHAR(255), etc.) : ");
-                        String typeColonne = Lire.S();
-
-                        query.append(nomColonne).append(" ").append(typeColonne);
-
-                        if (colonne != nombreColonnes) {
-                            query.append(", ");
-                        }
-                    }
-                    query.append(")");
-
-                    st.executeUpdate(query.toString());
-                    System.out.println("Table 'nouvelle_table' créée avec succès (ou déjà existante).");
-                }
-
-            } catch (SQLException ex) {
-                throw ex;
-            }
-        }
-    } 
-}
-         
-*/
