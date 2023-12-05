@@ -4,22 +4,22 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class Realise_c {
+public class Machine_operation_c {
     private int idMachine;
-    private int idType;
+    private int idoperation;
     private int duree;
 
-    public Realise_c(int idMachine, int idType, int duree) {
+    public Machine_operation_c(int idMachine, int idoperation, int duree) {
         this.idMachine = idMachine;
-        this.idType = idType;
+        this.idoperation = idoperation;
         this.duree = duree;
     }
 
     public void sauvegarde(Connection conn) throws SQLException {
         try (PreparedStatement st = conn.prepareStatement(
-                "INSERT INTO realise (idmachine, idtype, duree) VALUES (?, ?, ?)")) {
+                "INSERT INTO machine_operation (idmachine, idoperation, duree) VALUES (?, ?, ?)")) {
             st.setInt(1, this.getIdMachine());
-            st.setInt(2, this.getIdType());
+            st.setInt(2, this.getidoperation());
             st.setInt(3, this.getDuree());
             st.executeUpdate();
         }
@@ -30,8 +30,8 @@ public class Realise_c {
         return idMachine;
     }
 
-    public int getIdType() {
-        return idType;
+    public int getidoperation() {
+        return idoperation;
     }
 
     public int getDuree() {
@@ -43,8 +43,8 @@ public class Realise_c {
         this.idMachine = idMachine;
     }
 
-    public void setIdType(int idType) {
-        this.idType = idType;
+    public void setidoperation(int idoperation) {
+        this.idoperation = idoperation;
     }
 
     public void setDuree(int duree) {
@@ -53,9 +53,9 @@ public class Realise_c {
 
     @Override
     public String toString() {
-        return "Realise{" +
+        return "machine_operation{" +
                 "idMachine=" + idMachine +
-                ", idType=" + idType +
+                ", idoperation=" + idoperation +
                 ", duree=" + duree +
                 '}';
     }

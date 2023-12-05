@@ -8,11 +8,16 @@ package com.mycompany.projetclean6;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Produit {
     private int id;
     private String ref;
     private String des;
+    // ------------------------
+    private List<ToutesLesOperations_c> operations = new ArrayList<>();//
+    // ------------------------
 
     public Produit(int id, String ref, String des) {
         this.id = id;
@@ -29,12 +34,26 @@ public class Produit {
             st.executeUpdate();
         }
     }
+    
+    
+    // ------------------------
+    public void ajouterOperation(TypeOperation operation, int ordreExecution) { //
+        ToutesLesOperations_c lien = new ToutesLesOperations_c(this.id, operation.getId(), ordreExecution); //
+        this.operations.add(lien); //
+    } //
 
+    public List<ToutesLesOperations_c> getOperations() { //
+        return operations; //
+    } //
+    
+  // ------------------------
+    
+    
     @Override
     public String toString() {
         return "produit{" +
                 "id=" + id +
-                ", idtype='" + ref + '\'' +
+                ", idoperation='" + ref + '\'' +
                 ", des='" + des + '\'' +
                 '}';
     }

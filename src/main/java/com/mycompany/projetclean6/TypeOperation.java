@@ -9,6 +9,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -17,7 +19,9 @@ import java.sql.Statement;
 public class TypeOperation {
     private int id;
     private String des;
-    
+    // ------------------------
+    private List<Machine_operation_c> realisations = new ArrayList<>();
+    // ------------------------
              
          public TypeOperation (int id,  String des){
              this.id=id;
@@ -41,7 +45,24 @@ public class TypeOperation {
         }
     }
 }
+    
+    
+    
+    
+     // ------------------------
+        public void ajouterRealisation(int idMachine, int duree) {
+        Machine_operation_c realisation = new Machine_operation_c(idMachine, this.id, duree);
+        this.realisations.add(realisation);
+    }
 
+    public List<Machine_operation_c> getRealisations() {
+        return realisations;
+    }
+     // ------------------------
+    
+    
+    
+    
                 @Override
          public String toString() {
              return "typeoperation{" +

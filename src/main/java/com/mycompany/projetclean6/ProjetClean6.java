@@ -112,9 +112,9 @@ public class ProjetClean6 {
                         + ")\n"
         );
             st.executeUpdate(
-                    "create table toutes_les_opérations (\n"
+                    "create table produit_operation (\n"
                     + "    id integer not null primary key ,\n"
-                    + "    idtypeoperation integer not null,\n"
+                    + "    idoperationoperation integer not null,\n"
                     + "    idproduit integer not null,\n"
                     + ")\n"
             );
@@ -125,9 +125,9 @@ public class ProjetClean6 {
                     + ")\n"
             );
             st.executeUpdate(
-                    "create table realise (\n"
+                    "create table machine_operation (\n"
                     + "    idmachine integer not null,\n"
-                    + "    idtype integer not null,\n"
+                    + "    idoperation integer not null,\n"
                     + "    durée integer not null,\n"
                     + ")\n"
             );
@@ -147,32 +147,32 @@ public class ProjetClean6 {
             st.executeUpdate(
                     "alter table precede_operation \n"
                     + "    add constraint fk_precede_operation_opapres \n"
-                    + "    foreign key (opapres) references toutes_les_opérations(id) \n"
+                    + "    foreign key (opapres) references produit_operation(id) \n"
             );
             st.executeUpdate(
                     "alter table precede_operation \n"
                     + "    add constraint fk_precede_operation_opavant \n"
-                    + "    foreign key (opavant) references toutes_les_opérations(id) \n"
+                    + "    foreign key (opavant) references produit_operation(id) \n"
             );
             st.executeUpdate(
-                    "alter table toutes_les_opérations \n"
-                    + "    add constraint fk_produit_idproduit \n"
+                    "alter table produit_operation \n"
+                    + "    add constraint fk_produit_idproduit_p \n"
                     + "    foreign key (idproduit) references produit(id) \n"
             );
             st.executeUpdate(
-                    "alter table toutes_les_opérations \n"
-                    + "    add constraint fk_typeoperation_idtype_tlo \n"
-                    + "    foreign key (idtypeoperation) references typeoperation(id) \n" // normal de rajouter foreign key si deja mise dans la creation de la table ?
+                    "alter table produit_operation \n"
+                    + "    add constraint fk_typeoperation_idoperation_p \n"
+                    + "    foreign key (idoperationoperation) references typeoperation(id) \n" // normal de rajouter foreign key si deja mise dans la creation de la table ?
             );
             st.executeUpdate( ///!\ à faire pendant le prochain TP 
-                    "alter table realise \n"
-                    + "    add constraint fk_machine_idmachine \n"
+                    "alter table machine_operation \n"
+                    + "    add constraint fk_machine_idmachine_m \n"
                     + "    foreign key (idmachine) references machine(id) \n"
             );
             st.executeUpdate( ///!\ à faire pendant le prochain TP 
-                    "alter table realise \n"
-                    + "    add constraint fk_typeoperation_idtype_r \n"
-                    + "    foreign key (idtype) references typeoperation(id) \n"
+                    "alter table machine_operation \n"
+                    + "    add constraint fk_typeoperation_idoperation_m \n"
+                    + "    foreign key (idoperation) references typeoperation(id) \n"
             );
             
             conn.commit();
@@ -445,12 +445,12 @@ public class ProjetClean6 {
             // puis les tables
             // suppression des liens
             try {
-                st.executeUpdate("alter table toutes_les_opérations drop constraint fk_typeoperation_idtype");
+                st.executeUpdate("alter table produit_operation drop constraint fk_typeoperation_idoperation");
             } catch (SQLException ex) {
                 // nothing to do : maybe the constraint was not created
             }
             try {
-                st.executeUpdate("alter table toutes_les_opérations drop constraint fk_produit_idproduit");
+                st.executeUpdate("alter table produit_operation drop constraint fk_produit_idproduit");
             } catch (SQLException ex) {
             }
             try {
@@ -464,12 +464,12 @@ public class ProjetClean6 {
                 // nothing to do : maybe the constraint was not created
             }
             try {
-                st.executeUpdate("alter table realise drop constraint fk_machine_idmachine");
+                st.executeUpdate("alter table machine_operation drop constraint fk_machine_idmachine");
             } catch (SQLException ex) {
                 // nothing to do : maybe the constraint was not created
             }
             try {
-                st.executeUpdate("alter table realise drop constraint fk_typeoperation_idtype");
+                st.executeUpdate("alter table machine_operation drop constraint fk_typeoperation_idoperation");
             } catch (SQLException ex) {
             }
             // je peux maintenant supprimer les tables
@@ -478,7 +478,7 @@ public class ProjetClean6 {
             } catch (SQLException ex) {
             }
             try {
-                st.executeUpdate("drop table toutes_les_opérations");
+                st.executeUpdate("drop table produit_operation");
             } catch (SQLException ex) {
             }
             try {
@@ -490,7 +490,7 @@ public class ProjetClean6 {
             } catch (SQLException ex) {
             }
             try {
-                st.executeUpdate("drop table realise");
+                st.executeUpdate("drop table machine_operation");
             } catch (SQLException ex) {
             }
             try {
