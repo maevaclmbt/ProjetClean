@@ -5,7 +5,7 @@
 package com.mycompany.projetclean6;
 
 
-import static com.mycompany.projetclean6.ProjetClean5.debut;
+import static com.mycompany.projetclean6.ProjetClean6.debut;
 import com.mycompagny.exeptions.ExceptionsUtils;
 
 
@@ -19,27 +19,50 @@ import java.sql.Statement;
  *
  * @author maeva
  */
-public class ProjetClean5 {
+public class ProjetClean6 {
     
     private Connection conn;
     
-    public ProjetClean5(Connection conn) {
+    public ProjetClean6(Connection conn) {
         this.conn = conn;
     }
  
 
     
-    public static void debut() {
+   public static void debut() {
     try  {
         Connection conn = connectSurServeurM3();
-        System.out.println("connecté");
-        ProjetClean5 projetClean5Instance = new ProjetClean5(conn);
-        projetClean5Instance.MenuMachine();
-        creeSchema(conn);
-        deleteSchema(conn);
-        initialise(conn);
+        System.out.println("Connecté");
+        ProjetClean6 projetClean5Instance = new ProjetClean6(conn);
+        //initialise(conn);
+        System.out.println("Voulez-vous lancer le Menu machine ? ('oui' ou 'non')");
+        String repMach = Lire.S();
+
+        while (!repMach.equals("oui") && !repMach.equals("non")) {
+            System.out.println("Veuillez entrer une réponse correcte : 'oui' ou 'non'");
+            repMach = Lire.S();
+        }
+
+        if (repMach.equals("oui")) {
+            
+            projetClean5Instance.MenuMachine();
+        }
+        System.out.println("Voulez-vous lancer le Menu Produit ? ('oui' ou 'non')");
+        String repProd = Lire.S();
+
+        while (!repProd.equals("oui") && !repProd.equals("non")) {
+            System.out.println("Veuillez entrer une réponse correcte : 'oui' ou 'non'");
+            repProd = Lire.S();
+        }
+
+        if (repProd.equals("oui")) {
+           //ProjetClean5 projetClean5Instance = new ProjetClean5(conn);
+            projetClean5Instance.MenuProduit();
+        }
+
+        
     } catch (SQLException ex) {
-        throw new Error("Connection impossible", ex);
+        throw new Error("Connexion impossible", ex);
     }
 }
   
@@ -65,7 +88,7 @@ public class ProjetClean5 {
 
         public static void creeSchema(Connection conn) throws SQLException { // si erreur provoquée lance exeption type sql + void = renvoit rien
         conn.setAutoCommit(false); // commit = valider modif table, si pas false, chaque enregistrement est ajoutée automatiquement, cette commande force l'arret de la fonctionnalité = enregistrer les info de la nouvelle table 
-        /*try (Statement st = conn.createStatement()){ //en cas d'erreur
+        try (Statement st = conn.createStatement()){ //en cas d'erreur
             st.executeUpdate(
                 "create table machine (\n"
                         + "    id integer not null primary key AUTO_INCREMENT,\n"
@@ -95,8 +118,8 @@ public class ProjetClean5 {
                     + ")\n"
             );
             st.executeUpdate(
-                    "create table produit not null(\n"
-                        + "    id integer  ,\n"
+                    "create table produit (\n"
+                        + "    id integer primary key AUTO_INCREMENT ,\n"   //enelever primary key AUTO_INCREMENT si pblm 
                         + "    idtype varchar(15) not null,\n"
                         + "    des text not null,\n" // Ajout de la virgule manquante ici
                         + ")\n"
@@ -144,7 +167,7 @@ public class ProjetClean5 {
         throw ex;
     } finally {
             conn.setAutoCommit (true); //tru = laisse l'ordi enregistrer 
-        }*/
+        }
     } 
         
         
@@ -163,7 +186,7 @@ public class ProjetClean5 {
         while (rep != 0) {
             try (Statement st = this.conn.createStatement()) {
             int i = 1;
-            System.out.println("Menu utilisateur");
+            System.out.println("Menu machine");
             System.out.println("================");
             System.out.println((i++) + ") chercher une machine");
             System.out.println((i++) + ") ajouter une machine");
@@ -182,7 +205,7 @@ public class ProjetClean5 {
                         int id = r.getInt(1);
                         String ref = r.getString(2);
                         String des = r.getString(3);
-                        int puissance = r.getInt(3);
+                        int puissance = r.getInt(4);
                         System.out.println(id + " : " + ref + " : " + des + " : " + puissance);
                     }
                 } else if (rep == j++) {
@@ -203,12 +226,19 @@ public class ProjetClean5 {
                         System.out.println(id + " : " + ref + " : " + des + " : " + puissance);
                     }
                 } else if (rep == j++) {
+                    
+
+                    StringBuilder query = new StringBuilder("CREATE TABLE IF NOT EXISTS ");
+                    System.out.println("Entrez le nom de la table ?");
+                    String nomTable = Lire.S();
+                    query.append(nomTable).append(" (");
+                    
                     System.out.println("Combien de colonnes souhaitez-vous dans votre table ?");
                     int nombreColonnes = Lire.i();
 
-                    StringBuilder query = new StringBuilder("CREATE TABLE IF NOT EXISTS nouvelle_table (");
-
                     for (int colonne = 1; colonne <= nombreColonnes; colonne++) {
+                        
+                        
                         System.out.println("Entrez le nom de la colonne " + colonne + ": ");
                         String nomColonne = Lire.S();
 
@@ -224,7 +254,7 @@ public class ProjetClean5 {
                     query.append(")");
 
                     st.executeUpdate(query.toString());
-                    System.out.println("Table 'nouvelle_table' créée avec succès (ou déjà existante).");
+                    System.out.println("Table '" + nomTable + "' créée avec succès (ou déjà existante).");
                 }
 
             } catch (SQLException ex) {
@@ -233,10 +263,172 @@ public class ProjetClean5 {
         }
     } 
 }
-  
-        
-        
-        
+
+
+            public void MenuProduit() throws SQLException {
+
+            int rep = -1;
+
+            while (rep != 0) {
+                try (Statement st = this.conn.createStatement()) {
+                int i = 1;
+                System.out.println("Menu produit");
+                System.out.println("================");
+                System.out.println((i++) + ") chercher un produit");
+                System.out.println((i++) + ") ajouter un produit");
+                System.out.println((i++) + ") lister les produits");
+                System.out.println((i++) + ") créer une table");
+                System.out.println("0) Fin");
+                System.out.print("Votre choix : ");
+                rep = Lire.i();
+                try {
+                    int j = 1;
+                    if (rep == j++) {
+                        System.out.println("Quelle est l'id du produit que vous cherchez ?");
+                        int Uid = Lire.i();
+                        ResultSet r = st.executeQuery("select * from produit where id=" + Uid + ";");
+                        while (r.next()) {
+                            int id = r.getInt(1);
+                            String ref = r.getString(2);
+                            String des = r.getString(3);
+                            System.out.println(id + " : " + ref + " : " + des );
+                        }
+                    } else if (rep == j++) {
+                        System.out.println("Quelle est la ref de votre nouveau produit ?");
+                        String Uref = Lire.S();
+                        System.out.println("Quelle est la description de votre nouveau produit ?");
+                        String Udes = Lire.S();
+                        Produit nouveauProduit = new Produit(0, Uref, Udes);
+                        nouveauProduit.sauvegarde(conn);
+                    } else if (rep == j++) {
+                        ResultSet machines = st.executeQuery("SELECT * FROM produit");
+                        while (machines.next()) {
+                            int id = machines.getInt("id");
+                            String ref = machines.getString("ref");
+                            String des = machines.getString("des");
+                            System.out.println(id + " : " + ref + " : " + des );
+                        }
+                        
+                    } else if (rep == j++) {
+
+
+                        StringBuilder query = new StringBuilder("CREATE TABLE IF NOT EXISTS ");
+                        System.out.println("Entrez le nom de la table ?");
+                        String nomTable = Lire.S();
+                        query.append(nomTable).append(" (");
+
+                        System.out.println("Combien de colonnes souhaitez-vous dans votre table ?");
+                        int nombreColonnes = Lire.i();
+
+                        for (int colonne = 1; colonne <= nombreColonnes; colonne++) {
+
+
+                            System.out.println("Entrez le nom de la colonne " + colonne + ": ");
+                            String nomColonne = Lire.S();
+
+                            System.out.println("Entrez le type de données pour la colonne " + nomColonne + " (ex: INT, VARCHAR(255), etc.) : ");
+                            String typeColonne = Lire.S();
+
+                            query.append(nomColonne).append(" ").append(typeColonne);
+
+                            if (colonne != nombreColonnes) {
+                                query.append(", ");
+                            }
+                        }
+                        query.append(")");
+
+                        st.executeUpdate(query.toString());
+                        System.out.println("Table '" + nomTable + "' créée avec succès (ou déjà existante).");
+                    }
+
+                } catch (SQLException ex) {
+                     System.out.println(ExceptionsUtils.messageEtPremiersAppelsDansPackage(ex, "com.mycompagny", 5));//throw ex;  //on voudrait juste qu'il affiche l'erreur mais qu'on puisse continuer à l'utiliser --> 
+                }
+            }
+        } 
+}
+              /*  public void MenuOperations() throws SQLException {
+
+            int rep = -1;
+
+            while (rep != 0) {
+                try (Statement st = this.conn.createStatement()) {
+                int i = 1;
+                System.out.println("Menu operation");
+                System.out.println("================");
+                System.out.println((i++) + ") chercher une operation");
+                System.out.println((i++) + ") ajouter une operation");
+                System.out.println((i++) + ") lister les operations");
+                System.out.println((i++) + ") créer une table");
+                System.out.println("0) Fin");
+                System.out.print("Votre choix : ");
+                rep = Lire.i();
+                try {
+                    int j = 1;
+                    if (rep == j++) {
+                        System.out.println("Quelle est l'id de l'operation que vous cherchez ?");
+                        int Uid = Lire.i();
+                        ResultSet r = st.executeQuery("select * from produit where id=" + Uid + ";");
+                        while (r.next()) {
+                            int id = r.getInt(1);
+                            String ref = r.getString(2);
+                            String des = r.getString(3);
+                            System.out.println(id + " : " + ref + " : " + des );
+                        }
+                    } else if (rep == j++) {
+                        System.out.println("Quelle est la ref de votre nouveau produit ?");
+                        String Uref = Lire.S();
+                        System.out.println("Quelle est la description de votre nouveau produit ?");
+                        String Udes = Lire.S();
+                        Produit nouveauProduit = new Produit(0, Uref, Udes);
+                        nouveauProduit.sauvegarde(conn);
+                    } else if (rep == j++) {
+                        ResultSet machines = st.executeQuery("SELECT * FROM produit");
+                        while (machines.next()) {
+                            int id = machines.getInt("id");
+                            String ref = machines.getString("ref");
+                            String des = machines.getString("des");
+                            System.out.println(id + " : " + ref + " : " + des );
+                        }
+                        
+                    } else if (rep == j++) {
+
+
+                        StringBuilder query = new StringBuilder("CREATE TABLE IF NOT EXISTS ");
+                        System.out.println("Entrez le nom de la table ?");
+                        String nomTable = Lire.S();
+                        query.append(nomTable).append(" (");
+
+                        System.out.println("Combien de colonnes souhaitez-vous dans votre table ?");
+                        int nombreColonnes = Lire.i();
+
+                        for (int colonne = 1; colonne <= nombreColonnes; colonne++) {
+
+
+                            System.out.println("Entrez le nom de la colonne " + colonne + ": ");
+                            String nomColonne = Lire.S();
+
+                            System.out.println("Entrez le type de données pour la colonne " + nomColonne + " (ex: INT, VARCHAR(255), etc.) : ");
+                            String typeColonne = Lire.S();
+
+                            query.append(nomColonne).append(" ").append(typeColonne);
+
+                            if (colonne != nombreColonnes) {
+                                query.append(", ");
+                            }
+                        }
+                        query.append(")");
+
+                        st.executeUpdate(query.toString());
+                        System.out.println("Table '" + nomTable + "' créée avec succès (ou déjà existante).");
+                    }
+
+                } catch (SQLException ex) {
+                     System.out.println(ExceptionsUtils.messageEtPremiersAppelsDansPackage(ex, "com.mycompagny", 5));//throw ex;  //on voudrait juste qu'il affiche l'erreur mais qu'on puisse continuer à l'utiliser --> 
+                }
+            }
+        } 
+}    */
          public static void deleteSchema(Connection conn) throws SQLException {
         try (Statement st = conn.createStatement()) {
             // pour être sûr de pouvoir supprimer, il faut d'abord supprimer les liens
