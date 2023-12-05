@@ -301,11 +301,11 @@ public class ProjetClean6 {
                         Produit nouveauProduit = new Produit(0, Uref, Udes);
                         nouveauProduit.sauvegarde(conn);
                     } else if (rep == j++) {
-                        ResultSet machines = st.executeQuery("SELECT * FROM produit");
-                        while (machines.next()) {
-                            int id = machines.getInt("id");
-                            String ref = machines.getString("ref");
-                            String des = machines.getString("des");
+                        ResultSet produit = st.executeQuery("SELECT * FROM produit");
+                        while (produit.next()) {
+                            int id = produit.getInt("id");
+                            String ref = produit.getString("ref");
+                            String des = produit.getString("des");
                             System.out.println(id + " : " + ref + " : " + des );
                         }
                         
@@ -347,7 +347,7 @@ public class ProjetClean6 {
             }
         } 
 }
-              /*  public void MenuOperations() throws SQLException {
+                public void MenuOperations() throws SQLException {
 
             int rep = -1;
 
@@ -368,27 +368,23 @@ public class ProjetClean6 {
                     if (rep == j++) {
                         System.out.println("Quelle est l'id de l'operation que vous cherchez ?");
                         int Uid = Lire.i();
-                        ResultSet r = st.executeQuery("select * from produit where id=" + Uid + ";");
+                        ResultSet r = st.executeQuery("select * from typeoperation where id=" + Uid + ";");
                         while (r.next()) {
                             int id = r.getInt(1);
-                            String ref = r.getString(2);
-                            String des = r.getString(3);
-                            System.out.println(id + " : " + ref + " : " + des );
+                            String des = r.getString(2);
+                            System.out.println(id + " : "  + des );
                         }
                     } else if (rep == j++) {
-                        System.out.println("Quelle est la ref de votre nouveau produit ?");
-                        String Uref = Lire.S();
                         System.out.println("Quelle est la description de votre nouveau produit ?");
                         String Udes = Lire.S();
-                        Produit nouveauProduit = new Produit(0, Uref, Udes);
-                        nouveauProduit.sauvegarde(conn);
+                        TypeOperation nouveauTypeOperation = new TypeOperation(0, Udes);
+                        nouveauTypeOperation.sauvegarde(conn);
                     } else if (rep == j++) {
-                        ResultSet machines = st.executeQuery("SELECT * FROM produit");
-                        while (machines.next()) {
-                            int id = machines.getInt("id");
-                            String ref = machines.getString("ref");
-                            String des = machines.getString("des");
-                            System.out.println(id + " : " + ref + " : " + des );
+                        ResultSet typeoperation = st.executeQuery("SELECT * FROM typeoperation");
+                        while (typeoperation.next()) {
+                            int id = typeoperation.getInt("id");
+                            String des = typeoperation.getString("des");
+                            System.out.println(id + " : " + des );
                         }
                         
                     } else if (rep == j++) {
@@ -428,7 +424,7 @@ public class ProjetClean6 {
                 }
             }
         } 
-}    */
+}    
          public static void deleteSchema(Connection conn) throws SQLException {
         try (Statement st = conn.createStatement()) {
             // pour être sûr de pouvoir supprimer, il faut d'abord supprimer les liens
