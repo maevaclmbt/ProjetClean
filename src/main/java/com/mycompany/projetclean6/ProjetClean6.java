@@ -59,6 +59,20 @@ public class ProjetClean6 {
            //ProjetClean5 projetClean5Instance = new ProjetClean5(conn);
             projetClean5Instance.MenuProduit();
         }
+        
+        System.out.println("Voulez-vous lancer le Menu Operation ? ('oui' ou 'non')");
+        String repTypeOp = Lire.S();
+
+        while (!repTypeOp.equals("oui") && !repTypeOp.equals("non")) {
+            System.out.println("Veuillez entrer une réponse correcte : 'oui' ou 'non'");
+            repTypeOp = Lire.S();
+        }
+
+        if (repTypeOp.equals("oui")) {
+           //ProjetClean5 projetClean5Instance = new ProjetClean5(conn);
+            projetClean5Instance.MenuOperation();
+        }
+
 
         
     } catch (SQLException ex) {
@@ -94,7 +108,7 @@ public class ProjetClean6 {
                         + "    id integer not null primary key AUTO_INCREMENT,\n"
                         + "    ref varchar(15) not null,\n"
                         + "    des text not null,\n" // Ajout de la virgule manquante ici
-                        + "    puissance double not null\n"
+                        + "    puissance double not null,\n"
                         + ")\n"
         );
             st.executeUpdate(
@@ -107,7 +121,7 @@ public class ProjetClean6 {
             st.executeUpdate(
                     "create table typeoperation (\n"
                     + "    id integer not null primary key AUTO_INCREMENT,\n"
-                    + "    des varchar(30) not null\n"
+                    + "    des varchar(30) not null,\n"
                     + ")\n"
             );
             st.executeUpdate(
@@ -120,14 +134,14 @@ public class ProjetClean6 {
             st.executeUpdate(
                     "create table produit (\n"
                         + "    id integer primary key AUTO_INCREMENT ,\n"   //enelever primary key AUTO_INCREMENT si pblm 
-                        + "    idtype varchar(15) not null,\n"
+                        + "    ref varchar(15) not null,\n"
                         + "    des text not null,\n" // Ajout de la virgule manquante ici
                         + ")\n"
             );
             st.executeUpdate(
                     "create table precede_operation (\n"
                     + "    opavant integer not null,\n"
-                    + "    opapres integer not null\n"
+                    + "    opapres integer not null,\n"
                     + ")\n"
             );
             st.executeUpdate(
@@ -142,23 +156,23 @@ public class ProjetClean6 {
             );
             st.executeUpdate(
                     "alter table toutes_les_opérations \n"
-                    + "    add constraint fk_toutes_les_opérations_idproduit \n"
+                    + "    add constraint fk_produit_idproduit \n"
                     + "    foreign key (idproduit) references produit(id) \n"
             );
             st.executeUpdate(
                     "alter table toutes_les_opérations \n"
-                    + "    add constraint fk_toutes_les_opérations_idtypeoperation \n"
+                    + "    add constraint fk_typeoperation_idtype_tlo \n"
                     + "    foreign key (idtypeoperation) references typeoperation(id) \n" // normal de rajouter foreign key si deja mise dans la creation de la table ?
             );
             st.executeUpdate( ///!\ à faire pendant le prochain TP 
                     "alter table realise \n"
-                    + "    add constraint fk_realise_idmachine \n"
-                    + "    foreign key (idmachine) references realise(id) \n"
+                    + "    add constraint fk_machine_idmachine \n"
+                    + "    foreign key (idmachine) references machine(id) \n"
             );
             st.executeUpdate( ///!\ à faire pendant le prochain TP 
                     "alter table realise \n"
-                    + "    add constraint fk_realise_idtype \n"
-                    + "    foreign key (idtype) references realise(id) \n"
+                    + "    add constraint fk_typeoperation_idtype_r \n"
+                    + "    foreign key (idtype) references typeoperation(id) \n"
             );
             
             conn.commit();
@@ -347,7 +361,7 @@ public class ProjetClean6 {
             }
         } 
 }
-                public void MenuOperations() throws SQLException {
+                public void MenuOperation() throws SQLException {
 
             int rep = -1;
 
@@ -375,10 +389,9 @@ public class ProjetClean6 {
                             System.out.println(id + " : "  + des );
                         }
                     } else if (rep == j++) {
-                        System.out.println("Quelle est la description de votre nouveau produit ?");
+                        System.out.println("Quelle est la description de votre nouvelle operation ?");
                         String Udes = Lire.S();
-                        TypeOperation nouveauTypeOperation = new TypeOperation(0, Udes);
-                        nouveauTypeOperation.sauvegarde(conn);
+                       st.executeUpdate("INSERT INTO `typeoperation` (`id`, `des`) VALUES (null, '" + Udes + ");");
                     } else if (rep == j++) {
                         ResultSet typeoperation = st.executeQuery("SELECT * FROM typeoperation");
                         while (typeoperation.next()) {
@@ -450,12 +463,12 @@ public class ProjetClean6 {
                 // nothing to do : maybe the constraint was not created
             }
             try {
-                st.executeUpdate("alter table realise drop constraint fk_realise_idmachines");
+                st.executeUpdate("alter table realise drop constraint fk_machine_idmachine");
             } catch (SQLException ex) {
                 // nothing to do : maybe the constraint was not created
             }
             try {
-                st.executeUpdate("alter table realise drop constraint fk_realise_idtype");
+                st.executeUpdate("alter table realise drop constraint fk_typeoperation_idtype");
             } catch (SQLException ex) {
             }
             // je peux maintenant supprimer les tables

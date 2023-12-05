@@ -11,20 +11,20 @@ import java.sql.SQLException;
 
 public class Produit {
     private int id;
-    private String idtype;
+    private String ref;
     private String des;
 
-    public Produit(int id, String idtype, String des) {
+    public Produit(int id, String ref, String des) {
         this.id = id;
-        this.idtype = idtype;
+        this.ref = ref;
         this.des = des;
     }
 
     public void sauvegarde(Connection conn) throws SQLException {
         try (PreparedStatement st = conn.prepareStatement(
-                "INSERT INTO produit (id, idtype, des) VALUES (?, ?, ?)")) {
+                "INSERT INTO produit (id, ref, des) VALUES (?, ?, ?)")) {
             st.setInt(1, this.getId());
-            st.setString(2, this.getIdtype());
+            st.setString(2, this.getRef());
             st.setString(3, this.getDes());
             st.executeUpdate();
         }
@@ -34,7 +34,7 @@ public class Produit {
     public String toString() {
         return "produit{" +
                 "id=" + id +
-                ", idtype='" + idtype + '\'' +
+                ", idtype='" + ref + '\'' +
                 ", des='" + des + '\'' +
                 '}';
     }
@@ -43,12 +43,12 @@ public class Produit {
         return id;
     }
 
-    public String getIdtype() {
-        return idtype;
+    public String getRef() {
+        return ref;
     }
 
     public void setRef(String ref) {
-        this.idtype = ref;
+        this.ref = ref;
     }
 
     public String getDes() {
