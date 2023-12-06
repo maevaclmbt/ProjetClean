@@ -16,7 +16,7 @@ public class Produit {
     private String ref;
     private String des;
     // ------------------------
-    private List<ToutesLesOperations_c> operations = new ArrayList<>();//
+    private List<Produit_operation_c> operations = new ArrayList<>();//
     // ------------------------
 
     public Produit(int id, String ref, String des) {
@@ -38,11 +38,11 @@ public class Produit {
     
     // ------------------------
     public void ajouterOperation(TypeOperation operation, int ordreExecution) { //
-        ToutesLesOperations_c lien = new ToutesLesOperations_c(this.id, operation.getId(), ordreExecution); //
+        Produit_operation_c lien = new Produit_operation_c(this.id, operation.getId(), ordreExecution); //
         this.operations.add(lien); //
     } //
 
-    public List<ToutesLesOperations_c> getOperations() { //
+    public List<Produit_operation_c> getOperations() { //
         return operations; //
     } //
     

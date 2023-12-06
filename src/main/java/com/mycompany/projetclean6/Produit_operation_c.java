@@ -4,12 +4,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class ToutesLesOperations_c {
+public class Produit_operation_c {
     private int id;
     private int idoperationoperation;
     private int idProduit;
 
-    public ToutesLesOperations_c(int id, int idoperationoperation, int idProduit) {
+    public Produit_operation_c(int id, int idoperationoperation, int idProduit) {
         this.id = id;
         this.idoperationoperation = idoperationoperation;
         this.idProduit = idProduit;
